@@ -80,10 +80,10 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div className="flex-grow flex items-center justify-center bg-[#030014] py-32 text-white">
+      <div className="flex-grow flex items-center justify-center bg-transparent py-32 text-white">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 rounded-full border-4 border-purple-500 border-t-cyan-400 animate-spin" />
-          <span className="text-sm text-gray-500 font-medium">Authorizing administrator panel...</span>
+          <div className="h-10 w-10 rounded-full border-4 border-purple-500/20 border-t-purple-600 animate-spin" />
+          <span className="text-sm text-purple-300/60 font-medium">Authorizing administrator panel...</span>
         </div>
       </div>
     );
@@ -97,19 +97,19 @@ export default function AdminLayout({
   if (!authenticated) return null;
 
   return (
-    <div className="flex-grow flex flex-col md:flex-row bg-[#030014] min-h-[calc(100vh-64px)]">
+    <div className="flex-grow flex flex-col md:flex-row bg-[#060414] min-h-[calc(100vh-64px)]">
       
       {/* 1. ADMIN SIDEBAR BAR */}
-      <aside className="w-full md:w-64 shrink-0 bg-[#080521]/60 border-r border-purple-950/60 p-6 flex flex-col gap-6">
+      <aside className="w-full md:w-64 shrink-0 bg-[#08051e]/85 backdrop-blur-md border-r border-purple-950/40 p-6 flex flex-col gap-6 shadow-xl">
         
         {/* Admin Card */}
-        <div className="p-4 rounded-xl border border-purple-500/20 bg-purple-950/15 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center text-cyan-400">
+        <div className="p-4 rounded-xl border border-purple-950/40 bg-purple-950/20 flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
             <UserCheck className="h-5 w-5" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-white uppercase tracking-wider">Administrator</span>
-            <span className="text-[10px] text-cyan-400/80 font-mono mt-0.5">
+            <span className="text-xs font-bold text-white uppercase tracking-widest">Administrator</span>
+            <span className="text-[10px] text-purple-400 font-mono mt-0.5 font-bold">
               {sbConfigured ? 'Live Supabase' : 'Sandbox Store'}
             </span>
           </div>
@@ -125,32 +125,32 @@ export default function AdminLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   isCurrent 
-                    ? 'bg-gradient-to-r from-purple-500/20 to-cyan-400/10 border border-purple-500/30 text-cyan-400' 
-                    : 'text-gray-400 hover:text-white hover:bg-purple-950/10'
+                    ? 'bg-purple-600/20 border border-purple-500/30 text-purple-200' 
+                    : 'text-purple-300/60 hover:text-purple-200 hover:bg-purple-950/20'
                 }`}
               >
                 <Icon className="h-4.5 w-4.5" />
                 <span className="flex-grow">{item.name}</span>
-                {isCurrent && <ChevronRight className="h-4 w-4 text-cyan-400 shrink-0" />}
+                {isCurrent && <ChevronRight className="h-4 w-4 text-purple-400 shrink-0" />}
               </Link>
             );
           })}
         </nav>
 
         {/* Sidebar Base Links */}
-        <div className="flex flex-col gap-2 border-t border-purple-950/50 pt-4 mt-auto">
+        <div className="flex flex-col gap-2 border-t border-purple-950/30 pt-4 mt-auto">
           <Link
             href="/"
-            className="flex items-center gap-3 py-2 px-4 rounded-lg text-xs font-bold text-gray-500 hover:text-white transition-all uppercase tracking-wider"
+            className="flex items-center gap-3 py-2 px-4 rounded-lg text-xs font-bold text-purple-400/60 hover:text-purple-300 transition-all uppercase tracking-widest cursor-pointer"
           >
             <Globe className="h-4 w-4" />
             Public Website
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 py-2.5 px-4 rounded-xl text-xs font-bold text-red-400 hover:bg-red-950/20 hover:text-red-300 transition-all uppercase tracking-wider border border-transparent hover:border-red-900/30 cursor-pointer"
+            className="flex items-center gap-3 py-2.5 px-4 rounded-xl text-xs font-bold text-red-400/80 hover:bg-red-950/20 hover:text-red-400 transition-all uppercase tracking-widest border border-transparent cursor-pointer"
           >
             <LogOut className="h-4.5 w-4.5 text-inherit" />
             Log Out Account

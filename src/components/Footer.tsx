@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Gamepad2, Mail, Phone, Cpu } from 'lucide-react';
+import { Mail, Phone, Cpu } from 'lucide-react';
 import { storeService } from '../lib/supabase';
 import { StoreSettings } from '../types';
 
@@ -18,21 +18,21 @@ export default function Footer() {
   const email = settings?.support_email || 'support@nextlevelstore.com';
 
   return (
-    <footer className="border-t border-purple-950/80 bg-[#030014]/90 text-gray-400 py-12 mt-auto no-print">
+    <footer className="border-t border-purple-950/40 bg-[#04020f] text-[#f3f4f6]/70 py-12 mt-auto no-print">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           
           {/* Brand Col */}
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 group w-max">
-              <div className="relative h-8 w-8 flex items-center justify-center rounded-lg bg-purple-900/20 border border-purple-500/20 overflow-hidden p-0.5">
+              <div className="relative h-8 w-8 flex items-center justify-center rounded-lg bg-purple-950/30 border border-purple-500/20 overflow-hidden p-0.5">
                 <img src="/logo.png" alt="Brand Logo" className="h-7 w-7 object-contain" />
               </div>
-              <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+              <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-[#a78bfa] to-[#7c3aed] bg-clip-text text-transparent">
                 {storeName}
               </span>
             </Link>
-            <p className="text-sm text-gray-400/80 leading-relaxed max-w-sm">
+            <p className="text-sm text-[#f3f4f6]/50 leading-relaxed max-w-sm">
               Your premium destination for buying premium digital games, gift cards, offline access, and online accounts. Safe, lightning fast, and at unbeatable reseller pricing.
             </p>
             
@@ -42,7 +42,7 @@ export default function Footer() {
                 href="https://discord.gg/TUkyptCNJ2"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-indigo-950/30 border border-indigo-500/20 text-indigo-400 hover:text-white hover:border-indigo-400 hover:shadow-[0_0_10px_rgba(99,102,241,0.3)] transition-all"
+                className="p-2 rounded-lg bg-[#5865F2]/10 border border-[#5865F2]/20 text-[#5865F2] hover:bg-[#5865F2] hover:text-white hover:shadow-sm transition-all"
                 title="Join our Discord Server"
               >
                 <svg className="h-5 w-5 fill-current" viewBox="0 0 127.14 96.36">
@@ -54,7 +54,7 @@ export default function Footer() {
                 href="https://www.instagram.com/next_level_store_/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-purple-950/30 border border-purple-500/20 text-purple-400 hover:text-white hover:border-purple-400 hover:shadow-[0_0_10px_rgba(167,139,250,0.3)] transition-all"
+                className="p-2 rounded-lg bg-purple-950/40 border border-purple-900/40 text-purple-400 hover:bg-purple-600 hover:text-white transition-all"
                 title="Follow our Instagram"
               >
                 <svg className="h-5 w-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
@@ -68,50 +68,52 @@ export default function Footer() {
 
           {/* Quick Navigation Links */}
           <div className="flex flex-col gap-3">
-            <span className="font-bold text-white text-sm tracking-wider uppercase">Quick Links</span>
-            <Link href="/" className="hover:text-cyan-400 text-sm transition-colors">Home Showcase</Link>
-            <Link href="/games" className="hover:text-cyan-400 text-sm transition-colors">Catalog / Search</Link>
+            <span className="font-bold text-[#f3f4f6] text-sm tracking-wider uppercase">Quick Links</span>
+            <Link href="/" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Home Showcase</Link>
+            <Link href="/games" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Catalog / Search</Link>
           </div>
 
           {/* Catalog Categories */}
           <div className="flex flex-col gap-3">
-            <span className="font-bold text-white text-sm tracking-wider uppercase">Categories</span>
-            <Link href="/games?category=steam" className="hover:text-cyan-400 text-sm transition-colors">Steam Games</Link>
-            <Link href="/games?category=online" className="hover:text-cyan-400 text-sm transition-colors">Online & Multiplayer</Link>
-            <Link href="/games?category=offline" className="hover:text-cyan-400 text-sm transition-colors">Offline Singleplayer</Link>
-            <Link href="/games?category=premium-accounts" className="hover:text-cyan-400 text-sm transition-colors">Premium Accounts</Link>
+            <span className="font-bold text-[#f3f4f6] text-sm tracking-wider uppercase">Categories</span>
+            <Link href="/games?category=steam" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Steam Games</Link>
+            <Link href="/games?category=online" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Online & Multiplayer</Link>
+            <Link href="/games?category=offline" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Offline Singleplayer</Link>
+            <Link href="/games?category=premium-accounts" className="hover:text-purple-400 text-sm text-[#f3f4f6]/60 transition-colors">Premium Accounts</Link>
           </div>
 
           {/* Support Information */}
           <div className="flex flex-col gap-3">
-            <span className="font-bold text-white text-sm tracking-wider uppercase">Need Assistance?</span>
-            <div className="flex items-center gap-2 text-sm">
-              <Phone className="h-4 w-4 text-cyan-400 shrink-0" />
-              <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
-                {whatsapp} (WhatsApp Support)
-              </a>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
+            <span className="font-bold text-[#f3f4f6] text-sm tracking-wider uppercase">Need Assistance?</span>
+            {settings?.enable_whatsapp && (
+              <div className="flex items-center gap-2 text-sm text-[#f3f4f6]/70">
+                <Phone className="h-4 w-4 text-purple-400 shrink-0" />
+                <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">
+                  {whatsapp} (WhatsApp Support)
+                </a>
+              </div>
+            )}
+            <div className="flex items-center gap-2 text-sm text-[#f3f4f6]/70">
               <Mail className="h-4 w-4 text-purple-400 shrink-0" />
-              <a href={`mailto:${email}`} className="hover:text-cyan-400 transition-colors">{email}</a>
+              <a href={`mailto:${email}`} className="hover:text-purple-400 transition-colors">{email}</a>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Cpu className="h-4 w-4 text-purple-600 shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-[#f3f4f6]/40">
+              <Cpu className="h-4 w-4 text-purple-400 shrink-0" />
               <span>Instant Digital Delivery</span>
             </div>
           </div>
         </div>
 
         {/* Footer Base */}
-        <div className="border-t border-purple-950/50 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500 text-center sm:text-left">
+        <div className="border-t border-purple-950/40 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-[#f3f4f6]/40 text-center sm:text-left">
             © {new Date().getFullYear()} {storeName}. Built for passionate gamers. Next Level reseller systems.
           </p>
-          <div className="flex items-center gap-4 text-xs text-gray-500/80">
+          <div className="flex items-center gap-4 text-xs text-[#f3f4f6]/30">
             <div className="flex gap-2">
-              <span className="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] uppercase font-bold tracking-widest text-cyan-500/60 shadow-[0_0_8px_rgba(0,240,255,0.05)]">UPI</span>
-              <span className="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] uppercase font-bold tracking-widest text-purple-500/60">Cards</span>
-              <span className="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] uppercase font-bold tracking-widest text-gray-400/60">NetBanking</span>
+              <span className="px-2 py-0.5 rounded bg-purple-950/30 border border-purple-900/30 text-[10px] uppercase font-bold tracking-widest text-purple-400/80 shadow-sm">UPI</span>
+              <span className="px-2 py-0.5 rounded bg-purple-950/30 border border-purple-900/30 text-[10px] uppercase font-bold tracking-widest text-purple-400/80 shadow-sm">Cards</span>
+              <span className="px-2 py-0.5 rounded bg-purple-950/30 border border-purple-900/30 text-[10px] uppercase font-bold tracking-widest text-purple-400/80 shadow-sm">NetBanking</span>
             </div>
           </div>
         </div>

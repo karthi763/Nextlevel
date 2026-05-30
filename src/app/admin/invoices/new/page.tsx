@@ -32,8 +32,9 @@ function InvoiceGeneratorContent() {
   const [saving, setSaving] = useState(false);
   const [downloadingPng, setDownloadingPng] = useState(false);
 
-  // Is Viewer Mode (loading an existing invoice to print/save)
+  // Is Viewer Mode / Edit Mode
   const viewInvoiceId = searchParams.get('view');
+  const editInvoiceId = searchParams.get('edit');
 
   // Customer Profile Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -77,6 +78,29 @@ function InvoiceGeneratorContent() {
             router.replace('/admin/invoices');
           }
         }
+
+        // If we are in edit mode, pre-populate form with invoice data
+        if (editInvoiceId) {
+          const invoices = await storeService.getInvoices();
+          const invoice = invoices.find(inv => inv.id === editInvoiceId);
+          if (invoice) {
+            setLoadedInvoice(invoice);
+            setCustomerName(invoice.customer_name);
+            setCustomerDiscord(invoice.customer_discord);
+            setCustomerUsername(invoice.customer_username || '');
+            setDiscount(invoice.discount);
+            setTaxRate(invoice.tax_rate);
+            if (invoice.items && invoice.items.length > 0) {
+              setItems(invoice.items.map(item => ({
+                gameId: item.game_id,
+                quantity: item.quantity,
+                price: item.unit_price
+              })));
+            }
+          } else {
+            router.replace('/admin/invoices');
+          }
+        }
       } catch (e) {
         console.error('Failed to load invoice generator data:', e);
       } finally {
@@ -84,7 +108,7 @@ function InvoiceGeneratorContent() {
       }
     }
     loadFormRequirements();
-  }, [viewInvoiceId, router]);
+  }, [viewInvoiceId, editInvoiceId, router]);
 
   const currencySymbol = settings?.currency_symbol || '₹';
   const currencyName = settings?.currency || 'INR';
@@ -174,6 +198,7 @@ function InvoiceGeneratorContent() {
     });
 
     const invoicePayload = {
+      id: editInvoiceId || undefined,
       customer_name: customerName.trim(),
       customer_discord: customerDiscord.trim(),
       customer_username: customerUsername.trim() || undefined,
@@ -285,10 +310,14 @@ function InvoiceGeneratorContent() {
           </button>
           <div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight uppercase">
-              {viewInvoiceId ? `BILL VIEWER: ${loadedInvoice?.invoice_number}` : 'INVOICE BUILDER'}
+              {viewInvoiceId ? `BILL VIEWER: ${loadedInvoice?.invoice_number}` : editInvoiceId ? 'EDIT INVOICE' : 'INVOICE BUILDER'}
             </h1>
             <p className="text-xs text-gray-500 mt-1">
-              {viewInvoiceId ? 'View customer details, total billing summary, and download copies.' : 'Manually issue wholesale bills for digital games.'}
+              {viewInvoiceId 
+                ? 'View customer details, total billing summary, and download copies.' 
+                : editInvoiceId 
+                  ? 'Modify issued wholesale receipt details, products and discounts.' 
+                  : 'Manually issue wholesale bills for digital games.'}
             </p>
           </div>
         </div>
@@ -504,7 +533,7 @@ function InvoiceGeneratorContent() {
               ) : (
                 <>
                   <Save className="h-4.5 w-4.5" />
-                  Submit & Log Invoice
+                  {editInvoiceId ? 'Save Invoice Changes' : 'Submit & Log Invoice'}
                 </>
               )}
             </button>
@@ -537,8 +566,8 @@ function InvoiceGeneratorContent() {
               <div className="flex justify-between items-start border-b-2 border-purple-900/20 pb-6">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
-                    <div className="p-1 rounded bg-purple-950 text-white">
-                      <Gamepad2 className="h-5 w-5 text-cyan-400" />
+                    <div className="relative h-10 w-10 flex items-center justify-center rounded-xl bg-purple-950 overflow-hidden p-0.5 shadow-sm">
+                      <img src="/logo.png" alt="Brand Logo" className="h-9 w-9 object-contain" />
                     </div>
                     <span className="font-extrabold text-xl tracking-tight text-purple-950">
                       {settings?.store_name || 'Next Level Store'}
@@ -552,10 +581,10 @@ function InvoiceGeneratorContent() {
                 <div className="flex flex-col items-end text-right">
                   <span className="text-2xl font-black text-purple-950 tracking-wider">INVOICE</span>
                   <span className="text-[10px] font-bold text-cyan-500 font-mono tracking-widest uppercase mt-0.5">
-                    {viewInvoiceId && loadedInvoice ? loadedInvoice.invoice_number : 'NLS-DRAFT-RECEIPT'}
+                    {loadedInvoice ? loadedInvoice.invoice_number : 'NLS-DRAFT-RECEIPT'}
                   </span>
                   <span className="text-[9px] text-gray-500 mt-1 font-medium">
-                    Date: {viewInvoiceId && loadedInvoice?.created_at 
+                    Date: {loadedInvoice?.created_at 
                       ? new Date(loadedInvoice.created_at).toLocaleDateString() 
                       : new Date().toLocaleDateString()}
                   </span>

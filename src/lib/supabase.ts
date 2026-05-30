@@ -213,6 +213,53 @@ export const storeService = {
     if (!supabase) return MockDb.saveInvoice(invoice);
 
     try {
+      if (invoice.id) {
+        // Edit / Update Existing
+        const { data: invData, error: invError } = await supabase
+          .from('invoices')
+          .update({
+            customer_name: invoice.customer_name,
+            customer_discord: invoice.customer_discord,
+            customer_username: invoice.customer_username,
+            discount: invoice.discount,
+            tax_rate: invoice.tax_rate,
+            total_amount: invoice.total_amount
+          })
+          .eq('id', invoice.id)
+          .select()
+          .single();
+
+        if (invError) throw invError;
+
+        // Delete previous Invoice items
+        await supabase
+          .from('invoice_items')
+          .delete()
+          .eq('invoice_id', invoice.id);
+
+        // Insert new Invoice items
+        if (invoice.items && invoice.items.length > 0) {
+          const itemRows = invoice.items.map(item => ({
+            invoice_id: invoice.id,
+            game_id: item.game_id,
+            quantity: item.quantity,
+            unit_price: item.unit_price
+          }));
+
+          const { error: itemsError } = await supabase
+            .from('invoice_items')
+            .insert(itemRows);
+
+          if (itemsError) throw itemsError;
+        }
+
+        return {
+          ...invData,
+          items: invoice.items
+        };
+      }
+
+      // Create New
       // 1. Get total invoices count to generate Invoice Number (or let DB handle it)
       const { count } = await supabase
         .from('invoices')
@@ -281,6 +328,20 @@ export const storeService = {
     } catch (e) {
       console.warn('Supabase saveInvoice failed, falling back to Local Storage:', e);
       return MockDb.saveInvoice(invoice);
+    }
+  },
+
+  async deleteInvoice(id: string): Promise<boolean> {
+    if (!supabase) return MockDb.deleteInvoice(id);
+
+    try {
+      await supabase.from('invoice_items').delete().eq('invoice_id', id);
+      const { error } = await supabase.from('invoices').delete().eq('id', id);
+      if (error) throw error;
+      return true;
+    } catch (e) {
+      console.warn('Supabase deleteInvoice failed, falling back to Local Storage:', e);
+      return MockDb.deleteInvoice(id);
     }
   },
 

@@ -28,12 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased min-h-screen flex flex-col bg-[#030014] text-[#f3f4f6]">
+    <html lang="en">
+      <body className="antialiased min-h-screen flex flex-col bg-background text-foreground">
         {/* Ambient background glows */}
-        <div className="fixed inset-0 -z-10 bg-[#030014]" />
-        <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-glow" />
-        <div className="fixed bottom-0 right-1/4 w-[400px] h-[400px] bg-cyan-600/5 rounded-full blur-[100px] pointer-events-none -z-10" />
+        <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#7c3aed]/[0.06] rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-glow" />
+        <div className="fixed bottom-0 right-1/4 w-[400px] h-[400px] bg-[#d946ef]/[0.04] rounded-full blur-[100px] pointer-events-none -z-10" />
 
         <Navbar />
         <main className="flex-grow flex flex-col">

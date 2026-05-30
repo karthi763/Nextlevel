@@ -109,7 +109,8 @@ const defaultSettings: StoreSettings = {
   support_email: 'support@nextlevelstore.com',
   invoice_footer: 'Thank you for shopping with Next Level Store. Happy Gaming!',
   currency: 'INR',
-  currency_symbol: '₹'
+  currency_symbol: '₹',
+  enable_whatsapp: false
 };
 
 const defaultInvoices: Invoice[] = [
@@ -284,6 +285,34 @@ export const MockDb = {
 
   saveInvoice(invoice: Omit<Invoice, 'id' | 'invoice_number' | 'created_at'> & { id?: string }): Invoice {
     const invoices = this.getInvoices();
+
+    if (invoice.id) {
+      // Edit / Update Existing
+      const idx = invoices.findIndex(inv => inv.id === invoice.id);
+      if (idx !== -1) {
+        const updatedInvoice: Invoice = {
+          ...invoices[idx],
+          customer_name: invoice.customer_name,
+          customer_discord: invoice.customer_discord,
+          customer_username: invoice.customer_username || '',
+          discount: Number(invoice.discount),
+          tax_rate: Number(invoice.tax_rate),
+          total_amount: invoice.total_amount,
+          items: invoice.items?.map((item, index) => ({
+            id: item.id || `item-${index}-${Math.random().toString(36).substring(2, 5)}`,
+            game_id: item.game_id,
+            game_title: item.game_title || '',
+            quantity: item.quantity,
+            unit_price: item.unit_price
+          })) || []
+        };
+        invoices[idx] = updatedInvoice;
+        setStorageItem('nls_invoices', invoices);
+        return updatedInvoice;
+      }
+    }
+
+    // Create New
     const count = invoices.length + 1;
     const year = new Date().getFullYear();
     const invoiceNumber = `NLS-${year}-${String(count).padStart(3, '0')}`;
@@ -309,6 +338,16 @@ export const MockDb = {
     setStorageItem('nls_games', games);
 
     return newInvoice;
+  },
+
+  deleteInvoice(id: string): boolean {
+    const invoices = this.getInvoices();
+    const filtered = invoices.filter(inv => inv.id !== id);
+    if (filtered.length !== invoices.length) {
+      setStorageItem('nls_invoices', filtered);
+      return true;
+    }
+    return false;
   },
 
   // Settings

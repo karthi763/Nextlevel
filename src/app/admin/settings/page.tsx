@@ -18,6 +18,7 @@ export default function AdminSettings() {
   const [invoiceFooter, setInvoiceFooter] = useState('');
   const [currency, setCurrency] = useState('INR');
   const [currencySymbol, setCurrencySymbol] = useState('₹');
+  const [enableWhatsapp, setEnableWhatsapp] = useState(false);
 
   useEffect(() => {
     async function loadSettings() {
@@ -30,6 +31,7 @@ export default function AdminSettings() {
           setInvoiceFooter(settings.invoice_footer || '');
           setCurrency(settings.currency);
           setCurrencySymbol(settings.currency_symbol);
+          setEnableWhatsapp(settings.enable_whatsapp ?? false);
         }
       } catch (e) {
         console.error('Failed to load settings:', e);
@@ -58,7 +60,8 @@ export default function AdminSettings() {
       support_email: supportEmail.trim(),
       invoice_footer: invoiceFooter.trim() || undefined,
       currency: currency.trim().toUpperCase(),
-      currency_symbol: currencySymbol.trim()
+      currency_symbol: currencySymbol.trim(),
+      enable_whatsapp: enableWhatsapp
     };
 
     try {
@@ -143,6 +146,21 @@ export default function AdminSettings() {
                   />
                 </div>
                 <span className="text-[10px] text-gray-500 leading-normal">This is where buy inquiries and "Contact WhatsApp" buttons redirect users.</span>
+              </div>
+
+              {/* Enable WhatsApp checkbox toggle */}
+              <div className="flex items-start gap-3 p-4 rounded-xl border border-purple-500/10 bg-purple-950/5 mt-2 col-span-1 sm:col-span-2">
+                <input 
+                  type="checkbox"
+                  id="enable_whatsapp"
+                  checked={enableWhatsapp}
+                  onChange={(e) => setEnableWhatsapp(e.target.checked)}
+                  className="h-4.5 w-4.5 rounded border-purple-900/40 bg-black/40 text-cyan-400 focus:ring-0 cursor-pointer mt-0.5"
+                />
+                <div className="flex flex-col">
+                  <label htmlFor="enable_whatsapp" className="text-xs font-bold uppercase text-gray-200 tracking-wider cursor-pointer">Enable WhatsApp Integrations</label>
+                  <span className="text-[10px] text-gray-500 mt-0.5 leading-normal">Toggle to show/hide WhatsApp buy buttons and inquiry shortcuts on game details pages. When disabled, the store will default to Discord support.</span>
+                </div>
               </div>
 
               {/* Support Email */}

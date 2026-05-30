@@ -63,4 +63,5 @@ export interface StoreSettings {
   invoice_footer?: string;
   currency: string; // e.g., 'USD', 'INR', 'EUR'
   currency_symbol: string; // e.g., '$', '₹', '€'
+  enable_whatsapp?: boolean;
 }

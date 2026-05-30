@@ -7,12 +7,14 @@ import {
   Search, 
   FileText, 
   Printer, 
-  Download, 
   Calendar, 
   User, 
   MessageSquare,
   Hash,
-  Info 
+  Info,
+  Eye,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 import { storeService } from '../../../lib/supabase';
 import { Invoice, StoreSettings } from '../../../types';
@@ -40,6 +42,22 @@ export default function AdminInvoicesList() {
     }
     loadInvoices();
   }, []);
+
+  const handleDeleteInvoice = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this invoice record?")) return;
+    
+    try {
+      const success = await storeService.deleteInvoice(id);
+      if (success) {
+        setInvoices(prev => prev.filter(inv => inv.id !== id));
+      } else {
+        alert("Failed to delete invoice record.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error occurred while deleting invoice.");
+    }
+  };
 
   const currencySymbol = settings?.currency_symbol || '₹';
 
@@ -175,16 +193,32 @@ export default function AdminInvoicesList() {
                       {currencySymbol}{inv.total_amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                     </td>
 
-                    {/* Print Quick View Link */}
+                    {/* Actions Column */}
                     <td className="py-4 px-6">
-                      <div className="flex items-center justify-center">
+                      <div className="flex items-center justify-center gap-2">
                         <Link
                           href={`/admin/invoices/new?view=${inv.id}`}
-                          className="px-3.5 py-1.5 rounded-lg border border-purple-500/20 bg-purple-950/20 text-purple-300 hover:text-black hover:bg-cyan-400 hover:border-cyan-400 transition-all text-xs font-bold flex items-center gap-1.5"
+                          title="View & Print"
+                          className="p-2 rounded-lg border border-purple-500/20 bg-purple-950/20 text-purple-300 hover:text-white hover:bg-purple-600 transition-all cursor-pointer"
                         >
-                          <Printer className="h-3.5 w-3.5" />
-                          Print / Save
+                          <Eye className="h-4 w-4" />
                         </Link>
+                        
+                        <Link
+                          href={`/admin/invoices/new?edit=${inv.id}`}
+                          title="Edit Invoice"
+                          className="p-2 rounded-lg border border-purple-500/20 bg-purple-950/20 text-purple-300 hover:text-white hover:bg-purple-600 transition-all cursor-pointer"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Link>
+                        
+                        <button
+                          onClick={() => handleDeleteInvoice(inv.id)}
+                          title="Delete Invoice"
+                          className="p-2 rounded-lg border border-red-500/25 bg-red-950/20 text-red-400 hover:text-white hover:bg-red-600 transition-all cursor-pointer"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </td>
 
